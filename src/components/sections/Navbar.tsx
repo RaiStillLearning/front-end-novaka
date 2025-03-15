@@ -42,7 +42,7 @@ const Navbar = () => {
           ))}
 
           <Button>
-            <Link href="/login">Login</Link>
+            <Link href="/sign-in">Login</Link>
           </Button>
 
           <ModeToggle />
