@@ -4,6 +4,8 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/sections/Navbar";
+import { Toaster } from "sonner";
+import { Providers } from "@/components/provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,16 +22,19 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {/* Header */}
-          <Navbar />
-          <main className="min-h-screen">{children}</main>
-        </ThemeProvider>
+        <Providers>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {/* Header */}
+            <Navbar />
+            <Toaster />
+            <main className="min-h-screen">{children}</main>
+          </ThemeProvider>
+        </Providers>
 
         {/* Footer */}
         {/* <footer className="bg-gray-50 py-10 mt-28">

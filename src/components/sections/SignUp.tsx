@@ -1,18 +1,58 @@
-import { GalleryVerticalEnd } from "lucide-react";
+"use client";
 
+import { GalleryVerticalEnd, TriangleAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { useState } from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState(null);
+
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPending(true);
+
+    const res = await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      setPending(false);
+
+      toast.success(data.message);
+      router.push("/sign-in");
+    } else if (res.status === 400) {
+      setPending(false);
+      setError(data.message);
+    } else if (res.status === 500) {
+      setPending(false);
+      setError(data.message);
+    }
+  };
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <form>
+    <div className={cn("flex flex-col gap-6 mt-10", className)} {...props}>
+      {" "}
+      {/* <-- Tambahkan mt-6 */}
+      <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col items-center gap-2">
             <a
@@ -32,10 +72,25 @@ export function SignupForm({
               </Link>
             </div>
           </div>
+          {!!error && (
+            <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-4">
+              {" "}
+              {/* <-- Tambahkan mb-6 */}
+              <TriangleAlert />
+              <p>{error}</p>
+            </div>
+          )}
           <div className="flex flex-col gap-6">
             <div className="grid gap-2">
               <Label htmlFor="name">Full Name</Label>
-              <Input id="name" type="name" required />
+              <Input
+                id="name"
+                type="name"
+                disabled={pending}
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                required
+              />
             </div>
 
             <div className="grid gap-2">
@@ -43,7 +98,10 @@ export function SignupForm({
               <Input
                 id="email"
                 type="email"
+                disabled={pending}
                 placeholder="m@example.com"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
                 required
               />
             </div>
@@ -52,9 +110,16 @@ export function SignupForm({
               <div className="flex items-center">
                 <Label htmlFor="password">Password</Label>
               </div>
-              <Input id="password" type="password" required />
+              <Input
+                id="password"
+                type="password"
+                disabled={pending}
+                value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                required
+              />
             </div>
-            <Button type="submit" className="w-full">
+            <Button type="submit" disabled={pending} className="w-full">
               Sign up
             </Button>
           </div>
