@@ -26,19 +26,21 @@ export default function HomePage() {
                     className="basis-full md:basis-1/2 lg:basis-1/3 relative group" // Tambah "group" untuk efek hover
                   >
                     {/* Gambar */}
-                    <Image
-                      src={cancer.image}
-                      alt={cancer.title}
-                      width={1280}
-                      height={720}
-                      className="w-full h-full object-cover rounded-md"
-                    />
+                    <div className="relative h-full">
+                      <Image
+                        src={cancer.image}
+                        alt={cancer.title}
+                        width={1280}
+                        height={720}
+                        className="w-full h-full object-cover rounded-md"
+                      />
 
-                    {/* Overlay dengan teks */}
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-md p-4">
-                      <h3 className="text-lg md:text-xl font-semibold text-center">
-                        {cancer.title}
-                      </h3>
+                      {/* Overlay dengan teks */}
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-md p-4">
+                        <h3 className="text-lg md:text-xl font-semibold text-center">
+                          {cancer.title}
+                        </h3>
+                      </div>
                     </div>
                   </CarouselItem>
                 ))}
