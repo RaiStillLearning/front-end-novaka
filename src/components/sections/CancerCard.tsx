@@ -18,7 +18,7 @@ export default function CancerCard({ cancer }: CancerCardProps) {
 
   return (
     <div
-      className="bg-gray-100 dark:bg-gray-900 cursor-pointer border rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300"
+      className="bg-gray-50 dark:bg-gray-900 cursor-pointer border rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300"
       onClick={() => router.push(`/check/${cancer.id}`)}
     >
       <Image

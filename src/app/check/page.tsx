@@ -36,7 +36,7 @@ export default function CheckPage() {
           </p>
         </div>
         <div className="md:w-1/2 flex justify-center md:justify-end">
-          <div className="w-64 md:w-[380px] lg:w-[450px]">
+          <div className="w-64 md:w-[380px] lg:w-[450px] pt-5">
             <Image
               src="/check.jpg"
               alt="Pemeriksaan Kanker"
@@ -49,10 +49,10 @@ export default function CheckPage() {
       </div>
 
       {/* Cancer Card Section */}
-      <h2 className="text-3xl font-bold text-center mb-10">
+      <h2 className="text-3xl font-bold text-center mb-10 pt-5">
         Pilih Jenis Kanker
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 pb-40">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 pb-40 pt-5">
         {cancerData.map((cancer, index) => (
           <CancerCard key={index} cancer={cancer} />
         ))}
