@@ -1,0 +1,322 @@
+"use client";
+
+import { TeamMemberCard } from "@/components/about/TeamMemberCard";
+// import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+// import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import {
+  RocketIcon,
+  UsersIcon,
+  CodeIcon,
+  TargetIcon,
+  LayersIcon,
+} from "@/components/ui/icons";
+import { Separator } from "@/components/ui/separator";
+import Image from "next/image";
+
+const team = [
+  {
+    name: "Novaka",
+    image: "/images/novaka.jpg",
+    role: "Frontend Developer",
+    quote: "Menjadi bagian dari tim ini adalah pengalaman yang luar biasa!",
+    initials: "NV",
+  },
+  {
+    name: "Tegar",
+    image: "/images/IMG_0204.jpg",
+    role: "Backend Developer",
+    quote: "Bersama tim ini, saya belajar banyak hal baru.",
+    initials: "TG",
+  },
+  {
+    name: "Dendra",
+    image: "/images/IMG_0208.jpg",
+    role: "UI/UX Designer",
+    quote: "Desain bukan hanya estetika, tapi juga pengalaman.",
+    initials: "DN",
+  },
+  {
+    name: "Rakha",
+    image: "/images/IMG_0217.jpg",
+    role: "Project Manager",
+    quote: "Koordinasi tim adalah kunci kesuksesan proyek ini.",
+    initials: "RK",
+  },
+  {
+    name: "Arini",
+    image: "/images/IMG_0225.jpg",
+    role: "QA Engineer",
+    quote: "Kualitas adalah prioritas kami.",
+    initials: "AR",
+  },
+  {
+    name: "Radifka",
+    image: "/images/IMG_0324.jpg",
+    role: "DevOps Engineer",
+    quote: "Stabilitas dan efisiensi infrastruktur adalah tanggung jawab saya.",
+    initials: "RD",
+  },
+];
+
+const techStack = [
+  { name: "Next.js", category: "Framework" },
+  { name: "TailwindCSS", category: "Styling" },
+  { name: "ShadCN UI", category: "Component Library" },
+  { name: "Framer Motion", category: "Animation" },
+  { name: "Prisma", category: "ORM" },
+  { name: "PostgreSQL", category: "Database" },
+  { name: "Clerk", category: "Authentication" },
+];
+
+const coreValues = [
+  {
+    icon: <RocketIcon className="w-6 h-6" />,
+    title: "Innovation",
+    description: "Kami selalu mencari cara baru untuk menyelesaikan masalah",
+  },
+  {
+    icon: <UsersIcon className="w-6 h-6" />,
+    title: "Collaboration",
+    description: "Bekerja sama untuk mencapai hasil terbaik",
+  },
+  {
+    icon: <CodeIcon className="w-6 h-6" />,
+    title: "Excellence",
+    description: "Berkomitmen pada kualitas dalam setiap kode",
+  },
+  {
+    icon: <TargetIcon className="w-6 h-6" />,
+    title: "Impact",
+    description: "Menciptakan solusi yang benar-benar berguna",
+  },
+];
+
+export default function AboutPage() {
+  return (
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-16 mt-10">
+      {/* Hero Section */}
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center"
+      >
+        <div className="flex justify-center">
+          <Image
+            src="/images/IMG_0263.jpg"
+            alt="Tim kami"
+            width={1280}
+            height={200}
+            className="rounded-xl shadow-md object-cover"
+          />
+        </div>
+        <div className="space-y-4">
+          <Badge variant="outline" className="text-sm font-medium">
+            Coding Camp powered by DBS Foundation
+          </Badge>
+          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+            Mimpi Kami adalah{" "}
+            <span className="text-primary">Transformasi Deteksi Kanker</span>
+          </h1>
+          <p className="text-lg text-muted-foreground">
+            Website ini hadir sebagai solusi inovatif untuk membantu proses
+            deteksi kanker lebih cepat dan akurat melalui teknologi.
+          </p>
+        </div>
+      </motion.section>
+
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="text-center space-y-4"
+      >
+        <Badge variant="outline" className="text-sm font-medium">
+          Coding Camp powered by DBS Foundation
+        </Badge>
+        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+          Tentang <span className="text-primary">Tim Kami</span>
+        </h1>
+        <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+          Kami adalah sekelompok siswa yang bersemangat menciptakan solusi
+          teknologi untuk manajemen keuangan masjid yang lebih baik.
+        </p>
+      </motion.section>
+
+      <Separator />
+
+      {/* Team Section */}
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true, margin: "-100px" }}
+        className="space-y-8"
+      >
+        <div className="text-center">
+          <h2 className="text-2xl font-bold">Anggota Tim</h2>
+          <p className="text-muted-foreground">
+            Individu berbakat yang membuat proyek ini menjadi kenyataan
+          </p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {team.map((member) => (
+            <TeamMemberCard
+              key={member.name}
+              name={member.name}
+              image={member.image}
+              role={member.role}
+            />
+          ))}
+        </div>
+      </motion.section>
+
+      {/* Core Values */}
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true }}
+        className="space-y-8"
+      >
+        <div className="text-center">
+          <h2 className="text-2xl font-bold">Nilai Inti Kami</h2>
+          <p className="text-muted-foreground">
+            Prinsip-prinsip yang memandu setiap langkah kami
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {coreValues.map((value, index) => (
+            <motion.div
+              key={value.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
+              viewport={{ once: true }}
+            >
+              <Card className="h-full hover:shadow-md transition-shadow">
+                <CardHeader>
+                  <div className="flex items-center space-x-4">
+                    <div className="p-2 rounded-full bg-primary/10 text-primary">
+                      {value.icon}
+                    </div>
+                    <CardTitle className="text-lg">{value.title}</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">{value.description}</p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+      {/* Project Description & Tech Stack */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Project Description */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">Tentang Proyek</CardTitle>
+              <CardDescription>
+                Masjid Finance - Solusi Manajemen Keuangan Masjid
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-muted-foreground">
+                Masjid Finance adalah aplikasi manajemen keuangan yang
+                dikembangkan untuk memudahkan pengelolaan pemasukan dan
+                pengeluaran di lingkungan masjid.
+              </p>
+              <div className="flex items-center space-x-2">
+                <LayersIcon className="w-5 h-5 text-primary" />
+                <h3 className="font-medium">Fitur Utama:</h3>
+              </div>
+              <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
+                <li>Pencatatan transaksi yang transparan</li>
+                <li>Pelaporan keuangan otomatis</li>
+                <li>Manajemen donatur</li>
+                <li>Penganggaran yang terstruktur</li>
+                <li>Antarmuka yang mudah digunakan</li>
+              </ul>
+            </CardContent>
+          </Card>
+        </motion.section>
+
+        {/* Tech Stack */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">Teknologi Kami</CardTitle>
+              <CardDescription>
+                Modern stack untuk solusi yang handal
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-muted-foreground">
+                Kami menggunakan teknologi terbaru untuk memastikan aplikasi
+                berkinerja tinggi, aman, dan mudah dikembangkan.
+              </p>
+              <div className="space-y-3">
+                {Array.from(
+                  new Set(techStack.map((tech) => tech.category))
+                ).map((category) => (
+                  <div key={category} className="space-y-2">
+                    <h4 className="font-medium">{category}</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {techStack
+                        .filter((tech) => tech.category === category)
+                        .map((tech) => (
+                          <Badge
+                            key={tech.name}
+                            variant="outline"
+                            className="px-3 py-1 text-sm"
+                          >
+                            {tech.name}
+                          </Badge>
+                        ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.section>
+      </div>
+
+      {/* Footer */}
+      <motion.footer
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true }}
+        className="text-center text-muted-foreground text-sm pt-10"
+      >
+        <p>
+          © {new Date().getFullYear()} Coding Camp Project — Dibangun dengan ❤️
+          oleh Tim Masjid Finance
+        </p>
+      </motion.footer>
+    </main>
+  );
+}
