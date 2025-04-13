@@ -1,343 +1,177 @@
-// src/app/check/lung-cancer/form/page.tsx
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectItem,
+  SelectContent,
+} from "@/components/ui/select";
+import { toast } from "sonner";
+import { Card } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 
-export default function LungCancerFormPage() {
-  const router = useRouter();
-  const [formData, setFormData] = useState({
-    age: "",
-    gender: "",
-    smoking: "",
-    yellowFingers: "",
-    anxiety: "",
-    peerPressure: "",
-    chronicDisease: "",
-    fatigue: "",
-    allergy: "",
-    wheezing: "",
-    alcohol: "",
-    coughing: "",
-    shortnessOfBreath: "",
-    swallowingDifficulty: "",
-    chestPain: "",
-  });
+const initialState = {
+  cancerType: "Lung Cancer",
+  age: "",
+  smoking: "0",
+  yellow_fingers: "0",
+  anxiety: "0",
+  peer_pressure: "0",
+  chronic_disease: "0",
+  fatigue: "0",
+  allergy: "0",
+  wheezing: "0",
+  alcohol_consuming: "0",
+  coughing: "0",
+  shortness_of_breath: "0",
+  swallowing_difficulty: "0",
+  chest_pain: "0",
+};
 
+export default function FormPrediksi() {
+  const [formData, setFormData] = useState(initialState);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const handleChange = (key: string, value: string) => {
+    setFormData({ ...formData, [key]: value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+  const handleSubmit = async () => {
+    // Validasi input
+    if (!formData.age || isNaN(Number(formData.age))) {
+      toast.error("Harap masukkan umur yang valid");
+      return;
+    }
 
     try {
-      // Simulasi post data ke API
-      console.log("Submitting form data:", formData);
+      setLoading(true);
+      toast.loading("Sedang memproses prediksi...", { id: "prediction" });
 
-      // TODO: Uncomment kalau sudah ada endpoint API
-      // const response = await fetch("/api/lung-cancer-predict", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(formData),
+      const res = await fetch("http://localhost:3000/api/predict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": process.env.NEXT_PUBLIC_API_KEY || "",
+        },
+        body: JSON.stringify({
+          ...formData,
+          age: parseInt(formData.age),
+        }),
+      });
+
+      if (!res.ok) {
+        const error = await res.json().catch(() => ({}));
+        throw new Error(error.message || "Gagal memproses prediksi");
+      }
+
+      const data = await res.json();
+
+      // PERBAIKAN UTAMA: Format redirect yang benar
+      const queryParams = new URLSearchParams({
+        prediction: data.prediction,
+        probability: data.probability.toString(),
+        features: JSON.stringify(data.features_used),
+      });
+
+      // Method 1: Menggunakan string URL
+      router.push(`/result?${queryParams.toString()}`);
+
+      // Atau Method 2: Menggunakan object (alternatif)
+      // router.push({
+      //   pathname: '/result',
+      //   query: Object.fromEntries(queryParams.entries())
       // });
 
-      // const result = await response.json();
-      // console.log(result);
-
-      // Sukses, redirect misalnya ke halaman hasil
-      router.push("/check/lung-cancer/history");
-    } catch (error) {
-      console.error("Failed to submit:", error);
-      alert("Gagal mengirim data. Coba lagi nanti.");
+      toast.success("Prediksi berhasil!", { id: "prediction" });
+    } catch (error: any) {
+      console.error("Prediction error:", error);
+      toast.error(error.message || "Terjadi kesalahan", {
+        id: "prediction",
+        duration: 5000,
+      });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="container mx-auto pt-28 md:pt-40 px-6 md:px-12 lg:px-20">
-      <h1 className="text-3xl font-bold mb-8 text-center">
-        Lung Cancer Prediction Form
-      </h1>
+    <div className="py-30">
+      <Card className="max-w-2xl mx-auto p-8">
+        <div>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+            Form Prediksi Kanker Paru-Paru
+          </h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            Isi form berikut untuk memprediksi kemungkinan kanker paru-paru.
+          </p>
+        </div>
 
-      <Card className="max-w-3xl mx-auto">
-        <CardContent className="p-8">
-          <form
-            onSubmit={handleSubmit}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
-          >
-            {/* Age */}
-            <div>
-              <Label htmlFor="age">Age</Label>
-              <Input
-                id="age"
-                name="age"
-                type="number"
-                value={formData.age}
-                onChange={handleChange}
-                required
-              />
-            </div>
+        {/* Umur */}
+        <div className="space-y-2 mt-4">
+          <Label htmlFor="age">Umur</Label>
+          <Input
+            id="age"
+            type="number"
+            placeholder="Masukkan umur"
+            value={formData.age}
+            onChange={(e) => handleChange("age", e.target.value)}
+            min="1"
+            max="120"
+            required
+          />
+        </div>
 
-            {/* Gender */}
-            <div>
-              <Label htmlFor="gender">Gender</Label>
-              <select
-                id="gender"
-                name="gender"
-                value={formData.gender}
-                onChange={handleChange}
-                required
-                className="w-full border rounded-md p-2"
-              >
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
-            </div>
-
-            {/* Smoking */}
-            <div>
-              <Label htmlFor="smoking">Smoking</Label>
-              <select
-                id="smoking"
-                name="smoking"
-                value={formData.smoking}
-                onChange={handleChange}
-                required
-                className="w-full border rounded-md p-2"
-              >
-                <option value="">Select</option>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
-            </div>
-
-            {/* Yellow Fingers */}
-            <div>
-              <Label htmlFor="yellowFingers">Yellow Fingers</Label>
-              <select
-                id="yellowFingers"
-                name="yellowFingers"
-                value={formData.yellowFingers}
-                onChange={handleChange}
-                required
-                className="w-full border rounded-md p-2"
-              >
-                <option value="">Select</option>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
-            </div>
-
-            {/* Anxiety */}
-            <div>
-              <Label htmlFor="anxiety">Anxiety</Label>
-              <select
-                id="anxiety"
-                name="anxiety"
-                value={formData.anxiety}
-                onChange={handleChange}
-                required
-                className="w-full border rounded-md p-2"
-              >
-                <option value="">Select</option>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
-            </div>
-
-            {/* Peer Pressure */}
-            <div>
-              <Label htmlFor="peerPressure">Peer Pressure</Label>
-              <select
-                id="peerPressure"
-                name="peerPressure"
-                value={formData.peerPressure}
-                onChange={handleChange}
-                required
-                className="w-full border rounded-md p-2"
-              >
-                <option value="">Select</option>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
-            </div>
-
-            {/* Chronic Disease */}
-            <div>
-              <Label htmlFor="chronicDisease">Chronic Disease</Label>
-              <select
-                id="chronicDisease"
-                name="chronicDisease"
-                value={formData.chronicDisease}
-                onChange={handleChange}
-                required
-                className="w-full border rounded-md p-2"
-              >
-                <option value="">Select</option>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
-            </div>
-
-            {/* Fatigue */}
-            <div>
-              <Label htmlFor="fatigue">Fatigue</Label>
-              <select
-                id="fatigue"
-                name="fatigue"
-                value={formData.fatigue}
-                onChange={handleChange}
-                required
-                className="w-full border rounded-md p-2"
-              >
-                <option value="">Select</option>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
-            </div>
-
-            {/* Allergy */}
-            <div>
-              <Label htmlFor="allergy">Allergy</Label>
-              <select
-                id="allergy"
-                name="allergy"
-                value={formData.allergy}
-                onChange={handleChange}
-                required
-                className="w-full border rounded-md p-2"
-              >
-                <option value="">Select</option>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
-            </div>
-
-            {/* Wheezing */}
-            <div>
-              <Label htmlFor="wheezing">Wheezing</Label>
-              <select
-                id="wheezing"
-                name="wheezing"
-                value={formData.wheezing}
-                onChange={handleChange}
-                required
-                className="w-full border rounded-md p-2"
-              >
-                <option value="">Select</option>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
-            </div>
-
-            {/* Alcohol */}
-            <div>
-              <Label htmlFor="alcohol">Alcohol Consumption</Label>
-              <select
-                id="alcohol"
-                name="alcohol"
-                value={formData.alcohol}
-                onChange={handleChange}
-                required
-                className="w-full border rounded-md p-2"
-              >
-                <option value="">Select</option>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
-            </div>
-
-            {/* Coughing */}
-            <div>
-              <Label htmlFor="coughing">Coughing</Label>
-              <select
-                id="coughing"
-                name="coughing"
-                value={formData.coughing}
-                onChange={handleChange}
-                required
-                className="w-full border rounded-md p-2"
-              >
-                <option value="">Select</option>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
-            </div>
-
-            {/* Shortness of Breath */}
-            <div>
-              <Label htmlFor="shortnessOfBreath">Shortness of Breath</Label>
-              <select
-                id="shortnessOfBreath"
-                name="shortnessOfBreath"
-                value={formData.shortnessOfBreath}
-                onChange={handleChange}
-                required
-                className="w-full border rounded-md p-2"
-              >
-                <option value="">Select</option>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
-            </div>
-
-            {/* Swallowing Difficulty */}
-            <div>
-              <Label htmlFor="swallowingDifficulty">
-                Swallowing Difficulty
+        {/* Gejala biner */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+          {[
+            "smoking",
+            "yellow_fingers",
+            "anxiety",
+            "peer_pressure",
+            "chronic_disease",
+            "fatigue",
+            "allergy",
+            "wheezing",
+            "alcohol_consuming",
+            "coughing",
+            "shortness_of_breath",
+            "swallowing_difficulty",
+            "chest_pain",
+          ].map((field) => (
+            <div key={field} className="space-y-1">
+              <Label className="capitalize text-sm text-gray-700 dark:text-gray-300">
+                {field.replace(/_/g, " ")}
               </Label>
-              <select
-                id="swallowingDifficulty"
-                name="swallowingDifficulty"
-                value={formData.swallowingDifficulty}
-                onChange={handleChange}
-                required
-                className="w-full border rounded-md p-2"
+              <Select
+                value={formData[field as keyof typeof formData]}
+                onValueChange={(val) => handleChange(field, val)}
               >
-                <option value="">Select</option>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Pilih" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">Ya</SelectItem>
+                  <SelectItem value="0">Tidak</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
+          ))}
+        </div>
 
-            {/* Chest Pain */}
-            <div>
-              <Label htmlFor="chestPain">Chest Pain</Label>
-              <select
-                id="chestPain"
-                name="chestPain"
-                value={formData.chestPain}
-                onChange={handleChange}
-                required
-                className="w-full border rounded-md p-2"
-              >
-                <option value="">Select</option>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
-            </div>
-
-            {/* Submit */}
-            <div className="col-span-1 md:col-span-2">
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Submitting..." : "Submit Prediction"}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
+        <Button
+          onClick={handleSubmit}
+          disabled={loading}
+          className="w-full text-base mt-8"
+          size="lg"
+        >
+          {loading ? "Memproses..." : "Prediksi Sekarang"}
+        </Button>
       </Card>
     </div>
   );
