@@ -22,30 +22,31 @@ export default function HomePage() {
           <div className="flex justify-center">
             <Carousel className="w-full max-w-full mx-auto">
               <CarouselContent className="w-full">
-                {cancerData.map((cancer, index) => (
-                  <CarouselItem
-                    key={index}
-                    className="basis-full md:basis-1/2 lg:basis-1/3 relative group"
-                  >
-                    {/* Gambar */}
-                    <div className="relative h-full">
-                      <Image
-                        src={cancer.image}
-                        alt={cancer.title}
-                        width={1280}
-                        height={720}
-                        className="w-full h-full object-cover rounded-md"
-                      />
+                {cancerData.flatMap((cancer) =>
+                  cancer.image.map((image, index) => (
+                    <CarouselItem
+                      key={`${cancer.id}-${index}`}
+                      className="basis-full md:basis-1/2 lg:basis-1/3 relative group"
+                    >
+                      <div className="relative h-full">
+                        <Image
+                          src={image}
+                          alt={cancer.title}
+                          width={1280}
+                          height={720}
+                          className="w-full h-full object-cover rounded-md"
+                        />
 
-                      {/* Overlay dengan teks */}
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-md p-4">
-                        <h3 className="text-lg md:text-xl font-semibold text-center">
-                          {cancer.title}
-                        </h3>
+                        {/* Overlay dengan teks */}
+                        {/* <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-md p-4">
+                          <h3 className="text-lg md:text-xl font-semibold text-center">
+                            {cancer.title}
+                          </h3>
+                        </div> */}
                       </div>
-                    </div>
-                  </CarouselItem>
-                ))}
+                    </CarouselItem>
+                  ))
+                )}
               </CarouselContent>
               <CarouselPrevious />
               <CarouselNext />
@@ -72,7 +73,7 @@ export default function HomePage() {
                 {/* Gambar */}
                 <div>
                   <Image
-                    src={cancer.image}
+                    src={cancer.image[0]}
                     alt={cancer.title}
                     width={600}
                     height={400}

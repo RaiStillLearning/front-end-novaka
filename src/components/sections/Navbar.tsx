@@ -56,16 +56,24 @@ const Navbar = () => {
 
         {/* Navigasi Desktop */}
         <div className="hidden md:flex items-center space-x-4">
-          {navRoutes.map((route) => (
-            <Button
-              asChild
-              key={route.href}
-              variant="ghost"
-              className="px-4 py-2"
-            >
-              <Link href={route.href}>{route.label}</Link>
-            </Button>
-          ))}
+          {navRoutes
+            .filter((route) => {
+              // Kalau route-nya "/check" dan user belum login -> jangan tampilkan
+              if (route.href === "/check" && !session) {
+                return false;
+              }
+              return true;
+            })
+            .map((route) => (
+              <Button
+                asChild
+                key={route.href}
+                variant="ghost"
+                className="px-4 py-2"
+              >
+                <Link href={route.href}>{route.label}</Link>
+              </Button>
+            ))}
           <ModeToggle />
 
           {/* Login / Avatar */}

@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { stack, team } from "./data";
+import {  team } from "./data";
 import { TeamMemberCard } from "@/components/about/TeamMemberCard";
 import {
   CodeIcon,
@@ -15,7 +15,6 @@ import {
   TargetIcon,
   UsersIcon,
 } from "@/components/ui/icons";
-import TechnologyCard from "@/components/about/technology-card";
 
 const coreValues = [
   {
