@@ -1,4 +1,6 @@
 "use client";
+
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,7 +13,9 @@ import {
   SelectItem,
   SelectContent,
 } from "@/components/ui/select";
-import { useState } from "react";
+
+// Import Link dari Next.js untuk navigasi
+import Link from "next/link";
 
 const initialState = {
   cancerType: "Lung Cancer",
@@ -53,11 +57,11 @@ export default function FormPrediksi() {
       setLoading(true);
       toast.loading("Sedang memproses prediksi...", { id: "prediction" });
 
-      const res = await fetch("http://localhost:3000/api/predict", {
+      const res = await fetch("http://localhost:5000/api/predict", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": process.env.NEXT_PUBLIC_API_KEY!, // ← ini WAJIB ada
+          "x-api-key": process.env.NEXT_PUBLIC_API_KEY!,
         },
         body: JSON.stringify({
           ...formData,
@@ -72,6 +76,10 @@ export default function FormPrediksi() {
 
       const data = await res.json();
 
+      if (!data?.data?.prediction_label) {
+        throw new Error("Data prediksi tidak ditemukan");
+      }
+
       setResult({
         prediction: data.data.prediction_label,
         probability: data.data.probability,
@@ -80,7 +88,7 @@ export default function FormPrediksi() {
       toast.success("Prediksi berhasil!", { id: "prediction" });
     } catch (error: any) {
       console.error("Prediction error:", error);
-      toast.error(error.message || "Terjadi kesalahan", {
+      toast.error(error?.message || "Terjadi kesalahan", {
         id: "prediction",
         duration: 5000,
       });
@@ -160,7 +168,6 @@ export default function FormPrediksi() {
           {loading ? "Memproses..." : "Prediksi Sekarang"}
         </Button>
 
-        {/* Hasil Prediksi */}
         {result && (
           <div className="mt-6 p-4 border rounded bg-gray-50 dark:bg-gray-800">
             <p className="text-lg font-medium text-gray-900 dark:text-white">
@@ -172,6 +179,12 @@ export default function FormPrediksi() {
             <p className="text-sm text-gray-700 dark:text-gray-300">
               Probabilitas: {(result.probability * 100).toFixed(2)}%
             </p>
+            {/* Gunakan Link untuk navigasi */}
+            <Link href="/check/lung-cancer/history">
+              <Button className="w-full text-base mt-4" size="lg">
+                Lihat History Prediksi
+              </Button>
+            </Link>
           </div>
         )}
       </Card>
