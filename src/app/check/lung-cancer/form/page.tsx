@@ -1,6 +1,6 @@
 "use client";
-
-import { useState } from "react";
+import { toast } from "sonner";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -11,9 +11,7 @@ import {
   SelectItem,
   SelectContent,
 } from "@/components/ui/select";
-import { toast } from "sonner";
-import { Card } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const initialState = {
   cancerType: "Lung Cancer",
@@ -36,14 +34,16 @@ const initialState = {
 export default function FormPrediksi() {
   const [formData, setFormData] = useState(initialState);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const [result, setResult] = useState<null | {
+    prediction: string;
+    probability: number;
+  }>(null);
 
   const handleChange = (key: string, value: string) => {
     setFormData({ ...formData, [key]: value });
   };
 
   const handleSubmit = async () => {
-    // Validasi input
     if (!formData.age || isNaN(Number(formData.age))) {
       toast.error("Harap masukkan umur yang valid");
       return;
@@ -57,7 +57,7 @@ export default function FormPrediksi() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": process.env.NEXT_PUBLIC_API_KEY || "",
+          "x-api-key": process.env.NEXT_PUBLIC_API_KEY!, // ← ini WAJIB ada
         },
         body: JSON.stringify({
           ...formData,
@@ -72,21 +72,10 @@ export default function FormPrediksi() {
 
       const data = await res.json();
 
-      // PERBAIKAN UTAMA: Format redirect yang benar
-      const queryParams = new URLSearchParams({
-        prediction: data.prediction,
-        probability: data.probability.toString(),
-        features: JSON.stringify(data.features_used),
+      setResult({
+        prediction: data.data.prediction_label,
+        probability: data.data.probability,
       });
-
-      // Method 1: Menggunakan string URL
-      router.push(`/result?${queryParams.toString()}`);
-
-      // Atau Method 2: Menggunakan object (alternatif)
-      // router.push({
-      //   pathname: '/result',
-      //   query: Object.fromEntries(queryParams.entries())
-      // });
 
       toast.success("Prediksi berhasil!", { id: "prediction" });
     } catch (error: any) {
@@ -112,7 +101,6 @@ export default function FormPrediksi() {
           </p>
         </div>
 
-        {/* Umur */}
         <div className="space-y-2 mt-4">
           <Label htmlFor="age">Umur</Label>
           <Input
@@ -127,7 +115,6 @@ export default function FormPrediksi() {
           />
         </div>
 
-        {/* Gejala biner */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
           {[
             "smoking",
@@ -172,6 +159,21 @@ export default function FormPrediksi() {
         >
           {loading ? "Memproses..." : "Prediksi Sekarang"}
         </Button>
+
+        {/* Hasil Prediksi */}
+        {result && (
+          <div className="mt-6 p-4 border rounded bg-gray-50 dark:bg-gray-800">
+            <p className="text-lg font-medium text-gray-900 dark:text-white">
+              Hasil Prediksi:{" "}
+              <span className="font-bold text-blue-600 dark:text-blue-400">
+                {result.prediction}
+              </span>
+            </p>
+            <p className="text-sm text-gray-700 dark:text-gray-300">
+              Probabilitas: {(result.probability * 100).toFixed(2)}%
+            </p>
+          </div>
+        )}
       </Card>
     </div>
   );

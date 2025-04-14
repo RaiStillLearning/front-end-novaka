@@ -1,11 +1,11 @@
 // lib/api.js
 export async function predictCancer(data) {
   try {
-    const res = await fetch("/api/predict", {
+    const res = await fetch("http://localhost:3000/api/predict", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.NEXT_PUBLIC_API_KEY, // kalau pakai api-key
+        "x-api-key": process.env.NEXT_PUBLIC_API_KEY, // Kunci dari .env frontend
       },
       body: JSON.stringify(data),
     });
