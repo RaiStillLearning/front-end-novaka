@@ -57,17 +57,20 @@ export default function FormPrediksi() {
       setLoading(true);
       toast.loading("Sedang memproses prediksi...", { id: "prediction" });
 
-      const res = await fetch("http://localhost:5000/api/predict", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": process.env.NEXT_PUBLIC_API_KEY!,
-        },
-        body: JSON.stringify({
-          ...formData,
-          age: parseInt(formData.age),
-        }),
-      });
+      const res = await fetch(
+        "https://bekanker-production.up.railway.app/api/predict",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": process.env.NEXT_PUBLIC_API_KEY!,
+          },
+          body: JSON.stringify({
+            ...formData,
+            age: parseInt(formData.age),
+          }),
+        }
+      );
 
       if (!res.ok) {
         const error = await res.json().catch(() => ({}));

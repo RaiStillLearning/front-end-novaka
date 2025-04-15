@@ -15,13 +15,16 @@ export default function History() {
       setError(null); // Reset error sebelum mencoba mengambil data
 
       try {
-        const res = await fetch("http://localhost:5000/api/predict", {
-          method: "GET", // Ambil data history
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": `${process.env.NEXT_PUBLIC_API_KEY}`, // API Key dalam header
-          },
-        });
+        const res = await fetch(
+          "https://bekanker-production.up.railway.app/api/predict",
+          {
+            method: "GET", // Ambil data history
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": `${process.env.NEXT_PUBLIC_API_KEY}`, // API Key dalam header
+            },
+          }
+        );
 
         if (!res.ok) {
           throw new Error(`Gagal memuat history: ${res.statusText}`);
@@ -45,13 +48,16 @@ export default function History() {
     setDeletingId(id); // Tandai ID yang sedang dihapus
 
     try {
-      const res = await fetch(`http://localhost:5000/api/predict/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": `${process.env.NEXT_PUBLIC_API_KEY}`, // API Key dalam header
-        },
-      });
+      const res = await fetch(
+        `https://bekanker-production.up.railway.app/api/predict/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": `${process.env.NEXT_PUBLIC_API_KEY}`, // API Key dalam header
+          },
+        }
+      );
 
       if (!res.ok) {
         throw new Error(`Gagal menghapus data: ${res.statusText}`);
