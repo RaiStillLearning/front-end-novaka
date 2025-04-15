@@ -23,8 +23,8 @@ export const team = [
     initials: "DN",
   },
   {
-    name: "Rakha",
-    image: "/images/IMG_0217.jpg",
+    name: "Raka",
+    image: "/images/raka.jpg",
     role: "Project Manager",
     quote: "Koordinasi tim adalah kunci kesuksesan proyek ini.",
     initials: "RK",
