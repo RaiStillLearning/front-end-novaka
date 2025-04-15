@@ -2,32 +2,42 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useSearchParams, useRouter } from "next/navigation";
 import { Progress } from "@/components/ui/progress";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { useSearchParams, useRouter } from "next/navigation";
 
 interface FeatureData {
   [key: string]: number | string;
 }
 
 export default function PredictionResult() {
-  const params = useSearchParams();
-  const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
   const [predictionData, setPredictionData] = useState<{
     prediction: string | null;
     probability: number;
     features: FeatureData;
-  }>( {
+  }>({
     prediction: null,
     probability: 0,
     features: {},
   });
 
   useEffect(() => {
+    setIsClient(true); // Set state to true when component is mounted on the client-side
+  }, []);
+
+  // Conditional rendering to ensure that hooks are only used client-side
+  if (!isClient) {
+    return null; // Render nothing or a loading component until it's client-side
+  }
+
+  const params = useSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
     try {
-      // Ambil data dari URL parameters
       const prediction = params.get("prediction");
       const probability = parseFloat(params.get("probability") || "0");
       const featuresStr = params.get("features");
@@ -78,7 +88,7 @@ export default function PredictionResult() {
           <div className="flex items-center">
             <span className="mr-3 text-lg">Hasil:</span>
             <Badge
-              variant={isPositive ? "destructive" : "secondary"} {/* Ganti "success" ke "secondary" */}
+              variant={isPositive ? "destructive" : "secondary"}
               className="text-lg px-4 py-2"
             >
               {isPositive ? "Positif Kanker" : "Negatif Kanker"}
@@ -96,8 +106,7 @@ export default function PredictionResult() {
             </div>
             <Progress
               value={predictionData.probability}
-              className="h-3"
-              indicatorClass={isPositive ? "bg-red-500" : "bg-green-500"}
+              className={`h-3 ${isPositive ? "bg-red-500" : "bg-green-500"}`}
             />
           </div>
         </CardContent>
