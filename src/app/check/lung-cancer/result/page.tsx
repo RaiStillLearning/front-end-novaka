@@ -19,7 +19,7 @@ export default function PredictionResult() {
     prediction: string | null;
     probability: number;
     features: FeatureData;
-  }>({
+  }>( {
     prediction: null,
     probability: 0,
     features: {},
@@ -78,7 +78,7 @@ export default function PredictionResult() {
           <div className="flex items-center">
             <span className="mr-3 text-lg">Hasil:</span>
             <Badge
-              variant={isPositive ? "destructive" : "success"}
+              variant={isPositive ? "destructive" : "secondary"} {/* Ganti "success" ke "secondary" */}
               className="text-lg px-4 py-2"
             >
               {isPositive ? "Positif Kanker" : "Negatif Kanker"}
