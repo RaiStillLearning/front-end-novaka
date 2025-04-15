@@ -1,4 +1,3 @@
-// app/how-to-check/page.tsx
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,32 +13,22 @@ const steps = [
   {
     title: "Login Akun Terlebih Dahulu",
     description: "Masuk ke akun Anda untuk mengakses fitur pemeriksaan.",
-    image: "/images/login-step.jpg",
+    image: "/images/login-step.png",
   },
   {
     title: "Pergi ke Halaman Periksa",
     description: "Navigasi ke halaman pemeriksaan dari menu utama.",
-    image: "/images/exam-step.jpg",
+    image: "/images/exam-step.png",
   },
   {
-    title: "Pilih Risiko Kanker",
-    description: "Pilih jenis risiko kanker yang ingin Anda deteksi.",
-    image: "/images/select-step.jpg",
-  },
-  {
-    title: "Pilih Mulai",
-    description: "Klik tombol mulai untuk memulai proses pemeriksaan.",
-    image: "/images/start-step.jpg",
-  },
-  {
-    title: "Isi Kuesioner",
-    description: "Jawab pertanyaan yang disediakan dengan jujur dan lengkap.",
-    image: "/images/questionnaire-step.jpg",
+    title: "Masukkan Gejala Anda Di Form",
+    description: "Pilih jenis gejala yang anda alami.",
+    image: "/images/select-step.png",
   },
   {
     title: "Pilih Selesai & Lihat Hasil",
     description: "Setelah selesai, sistem akan menampilkan hasil deteksi.",
-    image: "/images/results-step.jpg",
+    image: "/images/results-step.png",
   },
 ];
 
@@ -65,13 +54,9 @@ export default function HowToCheckPage() {
   useEffect(() => {
     if (!emblaApi) return;
 
-    // Set initial index
     onSelect();
-
-    // Add event listener for slide changes
     emblaApi.on("select", onSelect);
 
-    // Cleanup
     return () => {
       emblaApi.off("select", onSelect);
     };
@@ -140,6 +125,8 @@ export default function HowToCheckPage() {
                           alt={step.title}
                           width={1280}
                           height={720}
+                          quality={100}
+                          priority
                           className="w-full h-full object-cover"
                         />
                       </div>
