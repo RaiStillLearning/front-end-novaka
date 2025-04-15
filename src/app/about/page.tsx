@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {  team } from "./data";
+import { team } from "./data";
 import { TeamMemberCard } from "@/components/about/TeamMemberCard";
 import {
   CodeIcon,
@@ -92,7 +92,7 @@ export default function AboutPage() {
         {/* Right Column: Image + Team */}
         <div className="space-y-6">
           <Image
-            src="/images/IMG_0263.jpg"
+            src="/images/teamwork.jpg"
             alt="Tim kami"
             width={600}
             height={500}
@@ -125,7 +125,7 @@ export default function AboutPage() {
           className="space-y-4"
         >
           <h2 className="text-2xl font-bold">Nilai Inti Kami</h2>
-          <Separator className="mb-6"/>
+          <Separator className="mb-6" />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {coreValues.map((value, index) => (
               <motion.div
